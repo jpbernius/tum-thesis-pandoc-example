@@ -1,0 +1,20 @@
+box:
+    id: jpbernius/pandoc:v0.0.2
+    entrypoint: /bin/bash -c
+build:
+    steps:
+        - script:
+            name: "Pandoc: Markdown -> PDF"
+            code: make pdf
+        - script:
+            name: Store Artifacts
+            code: cp *.pdf $WERCKER_OUTPUT_DIR/
+            cwd: build
+submodule_checkout:
+    steps:
+        - install-packages:
+            packages: ssh git rsync
+        - script:
+            name: initialize git submodules
+            code: git submodule update --init --recursive
+        - copy-to-output
